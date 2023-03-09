@@ -13,7 +13,9 @@ PUK = config5G["DEFAULT"]["SIM_PUK"] #Henter ut variablen SIM_PUK
 
 def ExecuteCommand(Command):
     ser = serial.Serial("/dev/ttyUSB2", 115200)
+    time.sleep(0.5)
     ser.write((Command+'\r\n').encode())
+    time.sleep(0.5)
     ser.close()
 
 def ReadResponse(PerferredResponse):
@@ -33,7 +35,8 @@ def ReadResponse(PerferredResponse):
 
 
 def UnlockSIM(PIN, PUK):
-    WaitForAvailability()
+    #WaitForAvailability()
+    print("Sender kommando")
     ExecuteCommand('at+cpin?')
     UnlockStatus = ReadResponse("FALSESTATEMENT")
     print(UnlockStatus)
