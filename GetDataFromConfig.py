@@ -20,33 +20,37 @@ def ReadResponse(PerferredResponse):
     ser = serial.Serial("/dev/ttyUSB2", 115200)
     RecievedString = ''
     while True:
-        if ser.inWaiting() > 0:
-            BitsWaiting = ser.inWaiting()
+        if ser.in_waiting():
             time.sleep(0.1)
-            NewBitsWaiting = ser.inWaiting - BitsWaiting
-            if not NewBitsWaiting:
-                RecievedString = ser.read(ser.inWaiting()).decode()
-                if PerferredResponse == RecievedString:
-                    ser.close()
-                    return 1
-                else:
-                    ser.close()
-                    return RecievedString
+            RecievedString = ser.read(ser.in_waiting())
+            if PerferredResponse in RecievedString.decode():
+                ser.close()
+                return 1
+            else:
+                ser.close()
+                return RecievedString
+
+
 
 def UnlockSIM(PIN, PUK):
-    ExecuteCommand('cpin?')
-    UnlockStatus = ReadResponse("OK")
-    if UnlockStatus == "+CPIN: PIN":
+    WaitForAvailability()
+    ExecuteCommand('at+cpin?')
+    UnlockStatus = ReadResponse("FALSESTATEMENT")
+    if b'\r\n+CPIN: SIM PIN\r\n\r\nOK\r\n' in UnlockStatus:
+        print("Sender PIN")
         ExecuteCommand("AT+CPIN="+PIN)
-    if UnlockStatus == "+CPIN: PUK":
+    if b'\r\n+CPIN: SIM PUK\r\n\r\nOK\r\n' in UnlockStatus:
+        print("Sender PUK")
         ExecuteCommand("AT+CPIN="+PUK)
 
 def WaitForSerial():
     ser = serial.Serial("/dev/ttyUSB2", 115200)
     ser.write(("AT"+'\r\n').encode())
-    while not ser.inWaiting():
-        print("Seriell er ikke tilgjengelig enda")
+    print("Venter på seriell")
+    while not ser.in_waiting():
+        print(".")
         time.sleep(1)
+    print("Seriell tilgjengelig!")
     
 
 def WaitForAvailability():
@@ -59,6 +63,21 @@ def WaitForAvailability():
             WaitForSerial()
             break
     time.sleep(1)
+
+def WaitForDisconnect():
+    while True:
+        AvailablePorts = []
+        PortRead = serial.tools.list_ports.comports()
+        for i in PortRead:
+            AvailablePorts.append(i.device)
+        if "/dev/ttyUSB2" not in AvailablePorts:
+            break
+
+def Start5G():
+    WaitForAvailability()
+    ExecuteCommand("AT+CUSBCFG=USBID,1E0E,9011")
+    WaitForDisconnect()
+    WaitForAvailability()
 
 
 #Denne funksjonen er skrevet av WaveShare. 
@@ -79,6 +98,6 @@ def send_at(command, back, timeout):
         return 1
 """
 
-print("Script startet")
-WaitForAvailability()
-print("Seriell tilgjengelig!")
+Start5G()
+UnlockSIM()
+print("5G satt opp!")
