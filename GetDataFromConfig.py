@@ -41,7 +41,7 @@ def UnlockSIM(PIN, PUK):
     if b'+CPIN: SIM PIN' in UnlockStatus:
         print("Sender PIN")
         ExecuteCommand("AT+CPIN="+PIN)
-    if b'\r\n+CPIN: SIM PUK\r\n\r\nOK\r\n' in UnlockStatus:
+    if b'+CPIN: SIM PUK' in UnlockStatus:
         print("Sender PUK")
         ExecuteCommand("AT+CPIN="+PUK)
 
@@ -56,17 +56,21 @@ def WaitForSerial():
     
 
 def WaitForAvailability():
+    print("Sjekker om enhet er tilgjengelig")
     while True:
         AvailablePorts = []
         PortRead = serial.tools.list_ports.comports()
         for i in PortRead:
             AvailablePorts.append(i.device)
         if "/dev/ttyUSB2" in AvailablePorts:
+            print("Enhet tilgjengelig!")
             WaitForSerial()
             break
+        print(".")
         time.sleep(1)
 
 def WaitForDisconnect():
+    print("Venter på at enheten kobler seg fra")
     while True:
         AvailablePorts = []
         PortRead = serial.tools.list_ports.comports()
@@ -74,13 +78,18 @@ def WaitForDisconnect():
             AvailablePorts.append(i.device)
         print(AvailablePorts)
         if "/dev/ttyUSB2" not in AvailablePorts:
+            print("Enhet frakoblet")
             break
         time.sleep(1)
 
 def Start5G():
     WaitForAvailability()
+    time.sleep(1)
     ExecuteCommand("AT+CUSBCFG=USBID,1E0E,9011")
+    print("Enheten konfigureres!")
+    time.sleep(1)
     WaitForDisconnect()
+    time.sleep(1)
     WaitForAvailability()
 
 
@@ -103,5 +112,6 @@ def send_at(command, back, timeout):
 """
 
 Start5G()
+print("Modulen er startet opp")
 UnlockSIM(PIN, PUK)
 print("5G satt opp!")
