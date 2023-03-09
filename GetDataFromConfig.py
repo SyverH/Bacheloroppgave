@@ -20,9 +20,9 @@ def ReadResponse(PerferredResponse):
     ser = serial.Serial("/dev/ttyUSB2", 115200)
     RecievedString = ''
     while True:
-        if ser.in_waiting() > 0:
+        if ser.inWaiting():
             time.sleep(0.1)
-            RecievedString = ser.read(ser.in_waiting())
+            RecievedString = ser.read(ser.inWaiting())
             if PerferredResponse in RecievedString.decode():
                 ser.close()
                 return 1
@@ -47,7 +47,7 @@ def WaitForSerial():
     ser = serial.Serial("/dev/ttyUSB2", 115200)
     ser.write(("AT"+'\r\n').encode())
     print("Venter på seriell")
-    while ser.in_waiting() < 1:
+    while ser.inWaiting() < 1:
         print(".")
         time.sleep(1)
     print("Seriell tilgjengelig!")
