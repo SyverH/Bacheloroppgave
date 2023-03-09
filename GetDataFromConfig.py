@@ -73,6 +73,7 @@ def WaitForDisconnect():
         print(AvailablePorts)
         if "/dev/ttyUSB2" not in AvailablePorts:
             break
+        time.sleep(1)
 
 def Start5G():
     WaitForAvailability()
