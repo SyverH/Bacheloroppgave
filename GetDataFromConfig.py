@@ -44,7 +44,7 @@ def UnlockSIM(PIN, PUK):
 def WaitForSerial():
     ser = serial.Serial("/dev/ttyUSB2", 115200)
     ser.write(("AT"+'\r\n').encode())
-    while not ser.in_Waiting():
+    while not ser.inWaiting():
         print("Seriell er ikke tilgjengelig enda")
         time.sleep(1)
     
