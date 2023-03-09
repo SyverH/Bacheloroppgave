@@ -52,14 +52,9 @@ def ExecuteAndRead(Command, PerferredResponse):
             else:
                 ser.close()
                 return RecievedString
+        time.sleep(1)
 
 def UnlockSIM(PIN, PUK):
-    #WaitForAvailability()
-    #print("Sender kommando")
-    #ExecuteCommand("AT+CPIN?")
-    #print("kommando sendt")
-    #UnlockStatus = ReadResponse("FALSESTATEMENT")
-    #print(UnlockStatus)
     UnlockStatus = ExecuteAndRead("AT+CPIN?", "NOTRELEVANT")
     if b'+CPIN: SIM PIN' in UnlockStatus:
         print("Sender PIN")
@@ -75,6 +70,7 @@ def WaitForSerial():
     while ser.inWaiting() < 1:
         print(".")
         time.sleep(1)
+    ser.close()
     print("Seriell tilgjengelig!")
     
 
