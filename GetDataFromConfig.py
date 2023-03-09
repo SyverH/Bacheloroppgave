@@ -62,7 +62,7 @@ def WaitForAvailability():
         if "/dev/ttyUSB2" in AvailablePorts:
             WaitForSerial()
             break
-    time.sleep(1)
+        time.sleep(1)
 
 def WaitForDisconnect():
     while True:
@@ -70,6 +70,7 @@ def WaitForDisconnect():
         PortRead = serial.tools.list_ports.comports()
         for i in PortRead:
             AvailablePorts.append(i.device)
+        print(AvailablePorts)
         if "/dev/ttyUSB2" not in AvailablePorts:
             break
 
@@ -99,5 +100,5 @@ def send_at(command, back, timeout):
 """
 
 Start5G()
-UnlockSIM()
+UnlockSIM(PIN, PUK)
 print("5G satt opp!")
