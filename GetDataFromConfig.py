@@ -35,16 +35,32 @@ def ReadResponse(PerferredResponse):
                 ser.close()
                 return RecievedString
 
-
+def ExecuteAndRead(Command, PerferredResponse):
+    RecievedString = ''
+    ser = serial.Serial("/dev/ttyUSB2", 115200)
+    print("Åpnet seriell kommunikasjon")
+    time.sleep(0.5)
+    ser.write((Command+'\r\n').encode())
+    while True:
+        print("Venter på svar")
+        if ser.inWaiting():
+            time.sleep(0.1)
+            RecievedString = ser.read(ser.inWaiting())
+            if PerferredResponse in RecievedString.decode():
+                ser.close()
+                return 1
+            else:
+                ser.close()
+                return RecievedString
 
 def UnlockSIM(PIN, PUK):
     #WaitForAvailability()
-    print("Sender kommando")
-    ExecuteCommand("AT+CPIN?")
-    print("kommando sendt")
-    UnlockStatus = ReadResponse("FALSESTATEMENT")
-    print(UnlockStatus)
-    #if b'\r\n+CPIN: SIM PIN\r\n\r\nOK\r\n' in UnlockStatus:
+    #print("Sender kommando")
+    #ExecuteCommand("AT+CPIN?")
+    #print("kommando sendt")
+    #UnlockStatus = ReadResponse("FALSESTATEMENT")
+    #print(UnlockStatus)
+    Unlockstatus = ExecuteAndRead("AT+CPIN?", "NOTRELEVANT")
     if b'+CPIN: SIM PIN' in UnlockStatus:
         print("Sender PIN")
         ExecuteCommand("AT+CPIN="+PIN)
