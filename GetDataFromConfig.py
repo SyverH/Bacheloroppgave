@@ -36,7 +36,9 @@ def UnlockSIM(PIN, PUK):
     WaitForAvailability()
     ExecuteCommand('at+cpin?')
     UnlockStatus = ReadResponse("FALSESTATEMENT")
-    if b'\r\n+CPIN: SIM PIN\r\n\r\nOK\r\n' in UnlockStatus:
+    print(UnlockStatus)
+    #if b'\r\n+CPIN: SIM PIN\r\n\r\nOK\r\n' in UnlockStatus:
+    if b'+CPIN: SIM PIN' in UnlockStatus:
         print("Sender PIN")
         ExecuteCommand("AT+CPIN="+PIN)
     if b'\r\n+CPIN: SIM PUK\r\n\r\nOK\r\n' in UnlockStatus:
