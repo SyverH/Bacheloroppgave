@@ -20,8 +20,11 @@ def ExecuteCommand(Command):
 
 def ReadResponse(PerferredResponse):
     ser = serial.Serial("/dev/ttyUSB2", 115200)
+    print("Åpnet seriell kommunikasjon")
     RecievedString = ''
     while True:
+        time.sleep(1)
+        print("Venter på svar")
         if ser.inWaiting():
             time.sleep(0.1)
             RecievedString = ser.read(ser.inWaiting())
