@@ -60,7 +60,7 @@ def UnlockSIM(PIN, PUK):
     #print("kommando sendt")
     #UnlockStatus = ReadResponse("FALSESTATEMENT")
     #print(UnlockStatus)
-    Unlockstatus = ExecuteAndRead("AT+CPIN?", "NOTRELEVANT")
+    UnlockStatus = ExecuteAndRead("AT+CPIN?", "NOTRELEVANT")
     if b'+CPIN: SIM PIN' in UnlockStatus:
         print("Sender PIN")
         ExecuteCommand("AT+CPIN="+PIN)
