@@ -37,7 +37,8 @@ def ReadResponse(PerferredResponse):
 def UnlockSIM(PIN, PUK):
     #WaitForAvailability()
     print("Sender kommando")
-    ExecuteCommand('at+cpin?')
+    ExecuteCommand("AT+CPIN?")
+    print("kommando sendt")
     UnlockStatus = ReadResponse("FALSESTATEMENT")
     print(UnlockStatus)
     #if b'\r\n+CPIN: SIM PIN\r\n\r\nOK\r\n' in UnlockStatus:
