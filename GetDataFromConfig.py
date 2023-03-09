@@ -6,6 +6,8 @@ import serial.tools.list_ports
 
 config5G = configparser.ConfigParser() # Config til 5G
 
+#Liten endring
+
 config5G.read("/boot/Rover_Config.ini") # Her skrives path til config-filen Rover_Config.ini
 
 PIN = config5G["DEFAULT"]["SIM_PIN"] #Henter ut variablen SIM_PIN
