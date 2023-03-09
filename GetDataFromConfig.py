@@ -6,8 +6,6 @@ import serial.tools.list_ports
 
 config5G = configparser.ConfigParser() # Config til 5G
 
-#Liten endring
-
 config5G.read("/boot/Rover_Config.ini") # Her skrives path til config-filen Rover_Config.ini
 
 PIN = config5G["DEFAULT"]["SIM_PIN"] #Henter ut variablen SIM_PIN
@@ -45,7 +43,7 @@ def UnlockSIM(PIN, PUK):
 
 def WaitForSerial():
     ser = serial.Serial("/dev/ttyUSB2", 115200)
-    ser.write("AT")
+    ser.write(("AT"+'\r\n').encode())
     while not ser.in_Waiting():
         print("Seriell er ikke tilgjengelig enda")
         time.sleep(1)
