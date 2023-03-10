@@ -10,7 +10,6 @@ config5G.read("/boot/Rover_Config.ini") # Her skrives path til config-filen Rove
 
 PIN = config5G["DEFAULT"]["SIM_PIN"] #Henter ut variablen SIM_PIN
 PUK = config5G["DEFAULT"]["SIM_PUK"] #Henter ut variablen SIM_PUK
-SIM_PASSCODESTATUS = config5G["DEFAULT"]["SIM_PASSCODE"] #Henter ut variablen for å se om pinkode er aktivert eller deaktivert
 
 def ExecuteCommand(Command):
     ser = serial.Serial("/dev/ttyUSB2", 115200)
